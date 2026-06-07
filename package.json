@@ -1,0 +1,71 @@
+{
+  "name": "neonvscode",
+  "displayName": "NeonVSCode",
+  "description": "True OLED black (#000000) neon theme with vibrant syntax from the original Brackets Neoncode palette. Optional neon glow via command palette.",
+  "version": "1.2.0",
+  "publisher": "kelvinelove",
+  "license": "MIT",
+  "main": "./src/extension.js",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "keywords": [
+    "theme",
+    "neon",
+    "neoncode",
+    "dark",
+    "oled",
+    "neon-oled",
+    "tokyo",
+    "glowing",
+    "vscode",
+    "neonvscode"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "homepage": "https://github.com/kelvinelove/neonvscode",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kelvinelove/neonvscode.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kelvinelove/neonvscode/issues"
+  },
+  "author": {
+    "name": "kelvinelove",
+    "url": "https://github.com/kelvinelove"
+  },
+  "contributes": {
+    "themes": [
+      {
+        "label": "NeonVSCode",
+        "uiTheme": "vs-dark",
+        "path": "./themes/neoncode-color-theme.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "neonvscode.enableGlow",
+        "title": "NeonVSCode: Enable Neon Glow"
+      },
+      {
+        "command": "neonvscode.disableGlow",
+        "title": "NeonVSCode: Disable Neon Glow"
+      }
+    ],
+    "configuration": {
+      "title": "NeonVSCode",
+      "properties": {
+        "neonvscode.disableGlow": {
+          "type": "boolean",
+          "default": false,
+          "description": "Disable the neon text-shadow glow effect (colors only)."
+        }
+      }
+    }
+  }
+}
