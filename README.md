@@ -1,38 +1,54 @@
-#  🖥 NeonCode
+# 🖥 NeonVSCode
 
- Make your code think it got a Visa and moved to Tokyo...
+**Tokyo Nights, OLED Blacks, and Neon Glow.**
 
-A theme for @Adobe's [Brackets](https://github.com/adobe/brackets) IDE with neon effects and shadows.
+NeonVSCode is a high-contrast, vibrant dark theme for Visual Studio Code. Originally born as the popular NeonCode theme for Adobe Brackets, it has been completely rebuilt for VS Code with **True OLED Black (#000000)** optimization and modernized syntax highlighting.
 
-## How to install
-1. Select **Brackets > File > Extension Manager...**
-2. Search for [Neon Code](https://github.com/kelvinelove/neoncode/).
-3. Click on the **Install** button.
+## ✨ Features
 
-**OR**
+*   **True OLED Black:** Backgrounds are set to `#000000` for infinite contrast on OLED and LED displays.
+*   **Vibrant Neon Palette:** Electric blues, purples, and cyans inspired by cyberpunk aesthetics.
+*   **Highly Readable:** Despite the neon aesthetic, colors are carefully picked to maintain high legibility during long coding sessions.
+*   **Semantic Highlighting:** Fully supports modern VS Code semantic tokens for a more accurate coding experience.
 
-1. Download/Clone the **.zip** file
-2. In Brackets, navigate to **Help > Show Extensions Folder > User**
-3. Place the **.zip** file in the **User** folder
-4. Refresh Brackets and select **Fun Live Color** from **View > Themes...**
+## 🚀 Installation
 
+1. Open **Visual Studio Code**.
+2. Go to **View > Extensions**.
+3. Search for `NeonVSCode`.
+4. Click **Install**.
+5. Go to **File > Preferences > Theme > Color Theme** and select **NeonVSCode**.
 
-## Screenshots
+## ⌨️ Commands & Configuration
 
-This is how the theme looks:
+This theme includes built-in commands to manage the neon aesthetic:
 
-HTML
-[![Screenshot](https://github.com/kelvinelove/neoncode/blob/master/assets/ss1.jpg "How HTML looks when the theme is applied")](#)
+*   `NeonVSCode: Enable Neon Glow`: Activates enhanced glowing effects.
+*   `NeonVSCode: Disable Neon Glow`: Reverts to a standard flat neon look.
 
+### Settings
+You can toggle the glow effect permanently in your `settings.json`:
+```json
+"neonvscode.disableGlow": false
+```
 
-CSS
-[![Screenshot](https://github.com/kelvinelove/neoncode/blob/master/assets/ss2.jpg?raw=true "How CSS and LESS looks")](#)
+## 📸 Screenshots
 
-Markdown
-[![Screenshot](https://github.com/kelvinelove/neoncode/blob/master/assets/ss3.jpg?raw=true "Markdown")](#)
+| Language | Preview |
+| :--- | :--- |
+| **JavaScript** | !JS Preview |
+| **Python** | !Python Preview |
+| **HTML** | !HTML Preview |
 
-JavaScript
-[![Screenshot](https://github.com/kelvinelove/neoncode/blob/master/assets/ss4.jpg?raw=true "How JS looks in the theme")](#)
+## 🛠 Compatibility
 
-Python
-[![Screenshot](https://github.com/kelvinelove/neoncode/blob/master/assets/ss5.jpg?raw=true "Python")](#)
+NeonVSCode is compatible with:
+*   Visual Studio Code v1.74.0+
+*   VSCodium
+*   GitHub Codespaces
+*   Cursor-based editors that support VS Code themes
+*   Antigravity coding environments (just kidding, but it looks that good!)
+
+## 📄 License
+
+This project is licensed under the MIT License.
