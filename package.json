@@ -2,7 +2,7 @@
   "name": "neonvscode",
   "displayName": "NeonVSCode",
   "description": "True OLED black (#000000) neon theme with vibrant syntax from the original Brackets Neoncode palette by @kelvinelove. Optional neon glow via command palette.",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "publisher": "kelvinelove",
   "license": "MIT",
   "main": "./src/extension.js",
