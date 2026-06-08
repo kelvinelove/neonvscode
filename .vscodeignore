@@ -1,0 +1,13 @@
+.git/**
+.github/**
+.vscode/**
+node_modules/**
+src/js/*.js
+!src/js/neon-glow-template.js
+.vscodeignore
+vsc-extension-quickstart.md
+**/tsconfig.json
+**/.gitattributes
+**/*.map
+# Ensure assets are NOT ignored
+!assets/**

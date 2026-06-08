@@ -49,9 +49,9 @@ You can toggle the glow effect permanently in your `settings.json`:
 
 | Language | Preview |
 | :--- | :--- |
-| **JavaScript** | !JS Preview |
-| **Python** | !Python Preview |
-| **HTML** | !HTML Preview |
+| **JavaScript** | *Included in main preview* |
+| **Python** | *Coming soon* |
+| **HTML** | *Included in main preview* |
 
 ## 🛠 Compatibility
 
