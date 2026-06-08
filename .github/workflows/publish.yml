@@ -3,7 +3,7 @@ name: Publish VSCode Extension
 on:
   push:
     tags:
-      - 'v*'   # runs when you push a tag like v1.0.0
+      - 'v*'   # runs when you push a tag like v1.0.0 to GitHub
 
 jobs:
   publish:
