@@ -11,13 +11,21 @@ NeonVSCode is a high-contrast, vibrant dark theme for Visual Studio Code. Origin
 *   **Highly Readable:** Despite the neon aesthetic, colors are carefully picked to maintain high legibility during long coding sessions.
 *   **Semantic Highlighting:** Fully supports modern VS Code semantic tokens for a more accurate coding experience.
 
-## 🚀 Installation
+## 📸 Preview
+
+![NeonVSCode Full Effect](assets/2.png)
+*The theme in full effect with Neon Glow enabled.*
+
+## � Installation
 
 1. Open **Visual Studio Code**.
 2. Go to **View > Extensions**.
 3. Search for `NeonVSCode`.
 4. Click **Install**.
 5. Go to **File > Preferences > Theme > Color Theme** and select **NeonVSCode**.
+
+![Theme Activated](assets/1.png)
+*NeonVSCode standard UI after activation.*
 
 ## ⌨️ Commands & Configuration
 
