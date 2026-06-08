@@ -26,6 +26,11 @@ This theme includes built-in commands to manage the neon aesthetic:
 *   `NeonVSCode: Enable Neon Glow`: Activates enhanced glowing effects.
 *   `NeonVSCode: Disable Neon Glow`: Reverts to a standard flat neon look.
 
+**Pro Tip:** Look for the ⚡️ **Neon: On/Off** button in your Status Bar (bottom right) for a one-click toggle!
+
+### ⚠️ Dealing with the "Unsupported" Warning
+Because this extension modifies internal VS Code files to inject the neon glow script, VS Code may display a notification stating that your installation is "Unsupported" or "Corrupt". This is standard behavior for any extension that modifies the UI layer (like SynthWave '84). It is safe to ignore. To remove this warning and the "Unsupported" text in the title bar, we recommend installing the **Fix VSCode Checksums** extension.
+
 ### Settings
 You can toggle the glow effect permanently in your `settings.json`:
 ```json

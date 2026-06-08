@@ -6,15 +6,17 @@ const SCRIPT_TAG = 'neon-glow.js';
 const EXTENSION_ID = 'kelvinelove.neonvscode';
 
 const messages = {
-  ACTIVATED: 'Neon glow enabled. Reload the window to apply. VS Code may show a "corrupted" warning — choose "Don\'t show again".',
+  ACTIVATED: 'Neon effects initialized! Restart VS Code to see the glow. Note: You may see an "Unsupported" warning—this is a standard VS Code notification for custom UI styles. Use the "Fix VSCode Checksums" extension to hide it.',
   DEACTIVATED: 'Neon glow disabled. Reload the window to apply.',
-  REACTIVATED: 'Neon glow is already enabled. Reload to refresh settings.',
+  REACTIVATED: 'Neon glow settings updated. Reload to apply.',
   NOT_RUNNING: 'Neon glow is not enabled.',
   ERROR_ACCESS_DENIED: 'Unable to modify VS Code core files. Try running with admin privileges.',
   ERROR_WORKBENCH_NOT_FOUND: 'Could not find the workbench HTML file. Please open an issue on GitHub.',
   ERROR_GENERIC: 'Something went wrong while enabling neon glow.',
   PROMPT_ENABLE: 'NeonVSCode theme is active. Enable the neon glow effect? (one-time setup)'
 };
+
+let statusBarItem;
 
 function resolveWorkbenchPaths(base) {
   const electronBaseCandidates = ['electron-browser', 'electron-sandbox'];
@@ -99,6 +101,7 @@ function enableGlow(context) {
 
     const output = injectScript(html);
     fs.writeFileSync(paths.htmlFile, output, 'utf-8');
+    updateStatusBarItem();
 
     vscode.window
       .showInformationMessage(messages.ACTIVATED, 'Reload')
@@ -108,6 +111,7 @@ function enableGlow(context) {
         }
       });
   } catch (error) {
+    updateStatusBarItem();
     if (/ENOENT|EACCES|EPERM/.test(error.code)) {
       vscode.window.showErrorMessage(messages.ERROR_ACCESS_DENIED);
     } else {
@@ -132,6 +136,7 @@ function disableGlow() {
     }
 
     fs.writeFileSync(paths.htmlFile, removeScript(html), 'utf-8');
+    updateStatusBarItem();
 
     if (fs.existsSync(paths.templateFile)) {
       fs.unlinkSync(paths.templateFile);
@@ -145,6 +150,7 @@ function disableGlow() {
         }
       });
   } catch (error) {
+    updateStatusBarItem();
     if (/ENOENT|EACCES|EPERM/.test(error.code)) {
       vscode.window.showErrorMessage(messages.ERROR_ACCESS_DENIED);
     } else {
@@ -184,6 +190,48 @@ function maybePromptForGlow(context) {
   }
 }
 
+function toggleGlow(context) {
+  const paths = getWorkbenchPaths();
+  if (!paths) return;
+  try {
+    const html = fs.readFileSync(paths.htmlFile, 'utf-8');
+    if (isGlowEnabled(html)) {
+      disableGlow();
+    } else {
+      enableGlow(context);
+    }
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+function updateStatusBarItem() {
+  if (!statusBarItem) {
+    statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+    statusBarItem.command = 'neonvscode.toggleGlow';
+  }
+
+  const paths = getWorkbenchPaths();
+  const isThemeActive = isNeonThemeActive();
+
+  // Show status bar item if the theme is active OR if the glow script is currently injected
+  const hasInjectedScript = paths && fs.existsSync(paths.htmlFile) && isGlowEnabled(fs.readFileSync(paths.htmlFile, 'utf-8'));
+
+  if (isThemeActive || hasInjectedScript) {
+    try {
+      const html = fs.readFileSync(paths.htmlFile, 'utf-8');
+      const enabled = isGlowEnabled(html);
+      statusBarItem.text = enabled ? "$(zap) Neon: On" : "$(zap) Neon: Off";
+      statusBarItem.tooltip = enabled ? "NeonVSCode: Click to disable neon glow" : "NeonVSCode: Click to enable neon glow";
+      statusBarItem.show();
+    } catch {
+      statusBarItem.hide();
+    }
+  } else {
+    statusBarItem.hide();
+  }
+}
+
 /**
  * @param {vscode.ExtensionContext} context
  */
@@ -191,14 +239,31 @@ function activate(context) {
   context.subscriptions.push(
     vscode.commands.registerCommand('neonvscode.enableGlow', () => enableGlow(context)),
     vscode.commands.registerCommand('neonvscode.disableGlow', () => disableGlow()),
+    vscode.commands.registerCommand('neonvscode.toggleGlow', () => toggleGlow(context)),
     vscode.workspace.onDidChangeConfiguration((event) => {
       if (event.affectsConfiguration('workbench.colorTheme')) {
         maybePromptForGlow(context);
+        updateStatusBarItem();
+      }
+      if (event.affectsConfiguration('neonvscode.disableGlow')) {
+        const paths = getWorkbenchPaths();
+        if (paths) {
+          try {
+            const html = fs.readFileSync(paths.htmlFile, 'utf-8');
+            if (isGlowEnabled(html)) {
+              writeGlowScript(context, vscode.workspace.getConfiguration('neonvscode').get('disableGlow', false));
+              vscode.window.showInformationMessage(messages.REACTIVATED, 'Reload').then(choice => {
+                if (choice === 'Reload') vscode.commands.executeCommand('workbench.action.reloadWindow');
+              });
+            }
+          } catch (e) {}
+        }
       }
     })
   );
 
   maybePromptForGlow(context);
+  updateStatusBarItem();
 }
 
 function deactivate() {}
