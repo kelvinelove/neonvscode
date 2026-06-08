@@ -13,7 +13,7 @@ NeonVSCode is a high-contrast, vibrant dark theme for Visual Studio Code. Origin
 
 ## 📸 Preview
 
-![NeonVSCode Full Effect](assets/2.png)
+![NeonVSCode Full Effect](https://private-user-images.githubusercontent.com/8897257/604616331-52fbf833-a821-4ddd-8c25-7efa5b0f0f98.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3ODA5NDMwNTcsIm5iZiI6MTc4MDk0Mjc1NywicGF0aCI6Ii84ODk3MjU3LzYwNDYxNjMzMS01MmZiZjgzMy1hODIxLTRkZGQtOGMyNS03ZWZhNWIwZjBmOTgucG5nP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI2MDYwOCUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNjA2MDhUMTgxOTE3WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9NzI3MTJjOTkyMDIyZTBiMWU5ODQzN2FkOTk2MmNjMWFlZmI5MjM2YjA3ZmM4ZDQ1MTE3ZDliZmQzZTQ4ZjQ0NCZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QmcmVzcG9uc2UtY29udGVudC10eXBlPWltYWdlJTJGcG5nIn0.lENRoUQ9V81PMAW66IDZP0NuRIeutW5BFcrsDnKEO-c)
 *The theme in full effect with Neon Glow enabled.*
 
 ## � Installation
@@ -24,7 +24,7 @@ NeonVSCode is a high-contrast, vibrant dark theme for Visual Studio Code. Origin
 4. Click **Install**.
 5. Go to **File > Preferences > Theme > Color Theme** and select **NeonVSCode**.
 
-![Theme Activated](assets/1.png)
+![Theme Activated](https://private-user-images.githubusercontent.com/8897257/604616368-3b56db78-6044-4084-b3f0-a605fb9d500f.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3ODA5NDMwNTcsIm5iZiI6MTc4MDk0Mjc1NywicGF0aCI6Ii84ODk3MjU3LzYwNDYxNjM2OC0zYjU2ZGI3OC02MDQ0LTQwODQtYjNmMC1hNjA1ZmI5ZDUwMGYucG5nP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI2MDYwOCUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNjA2MDhUMTgxOTE3WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9MWRmMGMwOTM4YmY3ZWMxZGFkZGI5OGVkYzdiMTliYzQ3ZjNjNjNhYTI0MmE2YWQ2NTY2ODlkZGVlZGJmYzFlMyZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QmcmVzcG9uc2UtY29udGVudC10eXBlPWltYWdlJTJGcG5nIn0.FGGiYMuulNST1fxTlaZjBCvikQVJ15UrJgwaW0k1XmU)
 *NeonVSCode standard UI after activation.*
 
 ## ⌨️ Commands & Configuration
