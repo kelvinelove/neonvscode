@@ -2,7 +2,7 @@
 
 **Tokyo Nights, OLED Blacks, and Neon Glow.**
 
-NeonVSCode is a high-contrast, vibrant dark theme for Visual Studio Code. Originally born as the popular NeonCode theme for Adobe Brackets, it has been completely rebuilt for VS Code with **True OLED Black (#000000)** optimization and modernized syntax highlighting.
+[NeonVSCode]([url](https://marketplace.visualstudio.com/items?itemName=kelvinelove.neonvscode)) is a high-contrast, vibrant dark theme for Visual Studio Code. Originally born as the popular NeonCode theme for Adobe Brackets, it has been completely rebuilt for VS Code with **True OLED Black (#000000)** optimization and modernized syntax highlighting.
 
 ## ✨ Features
 
