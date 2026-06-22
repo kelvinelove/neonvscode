@@ -6,11 +6,11 @@ const SCRIPT_TAG = 'neon-glow.js';
 const EXTENSION_ID = 'kelvinelove.neonvscode';
 
 const messages = {
-  ACTIVATED: 'Neon effects initialized! Restart VS Code to see the glow. Note: You may see an "Unsupported" warning—this is a standard VS Code notification for custom UI styles. Use the "Fix VSCode Checksums" extension to hide it.',
-  DEACTIVATED: 'Neon glow disabled. Reload the window to apply.',
+  ACTIVATED: 'Neon Glow enabled. VS Code must reload for this change to take effect. Note: VS Code may show an "Unsupported" warning - this is normal. Check README.md on how to disable it.',
+  DEACTIVATED: 'Neon Glow disabled. VS Code must reload for this change to take effect.',
   REACTIVATED: 'Neon glow settings updated. Reload to apply.',
   NOT_RUNNING: 'Neon glow is not enabled.',
-  ERROR_ACCESS_DENIED: 'Unable to modify VS Code core files. Try running with admin privileges.',
+  ERROR_ACCESS_DENIED: 'Unable to modify VS Code core files. Try running VS Code with admin privileges.',
   ERROR_WORKBENCH_NOT_FOUND: 'Could not find the workbench HTML file. Please open an issue on GitHub.',
   ERROR_GENERIC: 'Something went wrong while enabling neon glow.',
   PROMPT_ENABLE: 'NeonVSCode theme is active. Enable the neon glow effect? (one-time setup)'
@@ -48,12 +48,36 @@ function getWorkbenchPaths() {
   };
 }
 
-function writeGlowScript(context, disableGlow) {
+/**
+ * Clamp brightness to [0, 1] and default to 0.85 if invalid.
+ * @param {unknown} value
+ * @returns {number}
+ */
+function parseBrightness(value) {
+  const num = parseFloat(value);
+  if (isNaN(num)) return 0.85;
+  return Math.min(1, Math.max(0, num));
+}
+
+/**
+ * Convert a brightness float (0–1) to a 2-digit uppercase hex string.
+ * E.g. 0.45 → '73', 1.0 → 'FF', 0.0 → '00'
+ * @param {number} brightness
+ * @returns {string}
+ */
+function brightnessToHex(brightness) {
+  return Math.round(brightness * 255).toString(16).padStart(2, '0').toUpperCase();
+}
+
+function writeGlowScript(context, disableGlow, brightness) {
+  const brightnessHex = brightnessToHex(parseBrightness(brightness));
   const jsTemplate = fs.readFileSync(
     path.join(context.extensionPath, 'src', 'js', 'neon-glow-template.js'),
     'utf-8'
   );
-  const finalScript = jsTemplate.replace(/\[DISABLE_GLOW\]/g, disableGlow ? 'true' : 'false');
+  const finalScript = jsTemplate
+    .replace(/\[DISABLE_GLOW\]/g, disableGlow ? 'true' : 'false')
+    .replace(/\[BRIGHTNESS_HEX\]/g, brightnessHex);
   const paths = getWorkbenchPaths();
   fs.writeFileSync(paths.templateFile, finalScript, 'utf-8');
 }
@@ -83,9 +107,10 @@ function enableGlow(context) {
 
   const config = vscode.workspace.getConfiguration('neonvscode');
   const disableGlow = config.get('disableGlow', false);
+  const brightness = parseBrightness(config.get('glowBrightness', 0.45));
 
   try {
-    writeGlowScript(context, disableGlow);
+    writeGlowScript(context, disableGlow, brightness);
 
     const html = fs.readFileSync(paths.htmlFile, 'utf-8');
     if (isGlowEnabled(html)) {
@@ -245,13 +270,18 @@ function activate(context) {
         maybePromptForGlow(context);
         updateStatusBarItem();
       }
-      if (event.affectsConfiguration('neonvscode.disableGlow')) {
+      if (event.affectsConfiguration('neonvscode.disableGlow') || event.affectsConfiguration('neonvscode.glowBrightness')) {
         const paths = getWorkbenchPaths();
         if (paths) {
           try {
             const html = fs.readFileSync(paths.htmlFile, 'utf-8');
             if (isGlowEnabled(html)) {
-              writeGlowScript(context, vscode.workspace.getConfiguration('neonvscode').get('disableGlow', false));
+              const cfg = vscode.workspace.getConfiguration('neonvscode');
+              writeGlowScript(
+                context,
+                cfg.get('disableGlow', false),
+                parseBrightness(cfg.get('glowBrightness', 0.45))
+              );
               vscode.window.showInformationMessage(messages.REACTIVATED, 'Reload').then(choice => {
                 if (choice === 'Reload') vscode.commands.executeCommand('workbench.action.reloadWindow');
               });

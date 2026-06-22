@@ -13,7 +13,7 @@
 
 ## 📸 Preview
 
-![NeonVSCode Full Effect](https://github.com/user-attachments/assets/38284eaf-9899-41ca-ae0d-c59570362fe8)
+![NeonVSCode Full Effect](https://github.com/user-attachments/assets/6d55e983-394b-40e4-888b-9ffd7f816cbd)
 *The theme in full effect with Neon Glow enabled.*
 
 ## � Installation
@@ -31,19 +31,47 @@
 
 This theme includes built-in commands to manage the neon aesthetic:
 
-*   `NeonVSCode: Enable Neon Glow`: Activates enhanced glowing effects.
-*   `NeonVSCode: Disable Neon Glow`: Reverts to a standard flat neon look.
+### To enable the glow
 
-**Pro Tip:** Look for the ⚡️ **Neon: On/Off** button in your Status Bar (bottom right) for a one-click toggle!
+1. Open the **Command Palette** (`Ctrl+Shift+P` / `Cmd+Shift+P`)
+2. Type and run: **`NeonVSCode: Enable Neon Glow`**
+3. Click **Reload** when prompted — VS Code will restart with the glow active
 
-### ⚠️ Dealing with the "Unsupported" Warning
-Because this extension modifies internal VS Code files to inject the neon glow script, VS Code may display a notification stating that your installation is "Unsupported" or "Corrupt". This is standard behavior for any extension that modifies the UI layer (like SynthWave '84). It is safe to ignore. To remove this warning and the "Unsupported" text in the title bar, we recommend installing the **Fix VSCode Checksums** extension.
+> The ⚡️ **Neon: On/Off** button in the Status Bar (bottom right) is a one-click shortcut to toggle glow at any time.
 
-### Settings
-You can toggle the glow effect permanently in your `settings.json`:
+### To customize glow brightness
+
+Add the following to your `settings.json`:
+
 ```json
-"neonvscode.disableGlow": false
+"neonvscode.glowBrightness": 0.45
 ```
+
+- Range: `0.0` (transparent / no glow) → `1.0` (full brightness)
+- Default is `0.45` — a carefully tuned value that avoids eye strain during long sessions
+- **After changing this value**, re-run **`NeonVSCode: Enable Neon Glow`** from the Command Palette to apply the new brightness
+
+### To disable glow but keep the theme
+
+Add to your `settings.json`:
+
+```json
+"neonvscode.disableGlow": true
+```
+
+Then re-run **`NeonVSCode: Enable Neon Glow`** to apply, or run **`NeonVSCode: Disable Neon Glow`** to remove the glow script entirely.
+
+### To remove the corruption warning
+
+Because NeonVSCode modifies internal VS Code files to inject the glow script, VS Code may display an **"Unsupported"** or **"Your installation appears to be corrupt"** notification. **This is completely normal** — the same behaviour occurs with SynthWave '84 and other UI-modifying themes.
+
+To permanently remove this warning:
+
+1. Install the **[Fix VSCode Checksums](https://marketplace.visualstudio.com/items?itemName=lehni.vscode-fix-checksums)** extension
+2. Run **`Fix Checksums: Apply`** from the Command Palette
+3. Fully restart VS Code
+
+You can safely dismiss the warning at any time; it does not affect stability or functionality.
 
 ## 📸 Screenshots
 

@@ -1,17 +1,19 @@
 (function () {
+  // Glow shadow colors include an alpha byte ([BRIGHTNESS_HEX]) injected at install-time
+  // from the user's neonvscode.glowBrightness setting (0–1 → 00–FF).
   const tokenReplacements = {
-    'f6acff': "color: #f6acff; text-shadow: 1px 1px 8px #ee17f2, 1px -1px 8px #ee17f2, -1px 1px 8px #ee17f2, -1px -1px 8px #ee17f2; backface-visibility: hidden;",
-    '4848ff': "color: #4848ff; text-shadow: 1px 1px 8px #0000d3, 1px -1px 8px #0000d3, -1px 1px 8px #0000d3, -1px -1px 8px #0000d3; backface-visibility: hidden;",
-    'ffffa9': "color: #ffffa9; text-shadow: 1px 1px 8px #cccc0a, 1px -1px 8px #cccc0a, -1px 1px 8px #cccc0a, -1px -1px 8px #cccc0a; backface-visibility: hidden;",
-    '9cddfa': "color: #9cddfa; text-shadow: 1px 1px 8px #00b89d, 1px -1px 8px #00b89d, -1px 1px 8px #00b89d, -1px -1px 8px #00b89d; backface-visibility: hidden;",
-    '6efcaa': "color: #6efcaa; text-shadow: 1px 1px 8px #00840b, 1px -1px 8px #00840b, -1px 1px 8px #00840b, -1px -1px 8px #00840b; backface-visibility: hidden;",
-    'ff3e3e': "color: #ff3e3e; text-shadow: 1px 1px 8px #e60000, 1px -1px 8px #e60000, -1px 1px 8px #e60000, -1px -1px 8px #e60000; backface-visibility: hidden;",
-    'ffffff': "color: #ffffff; text-shadow: 1px 1px 8px #d6d6d6, 1px -1px 8px #d6d6d6, -1px 1px 8px #d6d6d6, -1px -1px 8px #d6d6d6; backface-visibility: hidden;",
-    'fa7fd9': "color: #fa7fd9; text-shadow: 1px 1px 8px #a6439b, 1px -1px 8px #a6439b, -1px 1px 8px #a6439b, -1px -1px 8px #a6439b; backface-visibility: hidden;",
-    'd0a74c': "color: #d0a74c; text-shadow: 1px 1px 8px #b68518, 1px -1px 8px #b68518, -1px 1px 8px #b68518, -1px -1px 8px #b68518; backface-visibility: hidden;",
-    'fd55d7': "color: #fd55d7; text-shadow: 1px 1px 8px #e62fde, 1px -1px 8px #e62fde, -1px 1px 8px #e62fde, -1px -1px 8px #e62fde; backface-visibility: hidden;",
-    'd9b970': "color: #d9b970; text-shadow: 1px 1px 8px #c28d1a, 1px -1px 8px #c28d1a, -1px 1px 8px #c28d1a, -1px -1px 8px #c28d1a; backface-visibility: hidden;",
-    'cccccc': "color: #cccccc; text-shadow: 1px 1px 8px #aaaaaa, 1px -1px 8px #aaaaaa, -1px 1px 8px #aaaaaa, -1px -1px 8px #aaaaaa; backface-visibility: hidden;"
+    'f6acff': "color: #f6acff; text-shadow: 1px 1px 8px #ee17f2[BRIGHTNESS_HEX], 1px -1px 8px #ee17f2[BRIGHTNESS_HEX], -1px 1px 8px #ee17f2[BRIGHTNESS_HEX], -1px -1px 8px #ee17f2[BRIGHTNESS_HEX]; backface-visibility: hidden;",
+    '4848ff': "color: #4848ff; text-shadow: 1px 1px 8px #0000d3[BRIGHTNESS_HEX], 1px -1px 8px #0000d3[BRIGHTNESS_HEX], -1px 1px 8px #0000d3[BRIGHTNESS_HEX], -1px -1px 8px #0000d3[BRIGHTNESS_HEX]; backface-visibility: hidden;",
+    'ffffa9': "color: #ffffa9; text-shadow: 1px 1px 8px #cccc0a[BRIGHTNESS_HEX], 1px -1px 8px #cccc0a[BRIGHTNESS_HEX], -1px 1px 8px #cccc0a[BRIGHTNESS_HEX], -1px -1px 8px #cccc0a[BRIGHTNESS_HEX]; backface-visibility: hidden;",
+    '9cddfa': "color: #9cddfa; text-shadow: 1px 1px 8px #00b89d[BRIGHTNESS_HEX], 1px -1px 8px #00b89d[BRIGHTNESS_HEX], -1px 1px 8px #00b89d[BRIGHTNESS_HEX], -1px -1px 8px #00b89d[BRIGHTNESS_HEX]; backface-visibility: hidden;",
+    '6efcaa': "color: #6efcaa; text-shadow: 1px 1px 8px #00840b[BRIGHTNESS_HEX], 1px -1px 8px #00840b[BRIGHTNESS_HEX], -1px 1px 8px #00840b[BRIGHTNESS_HEX], -1px -1px 8px #00840b[BRIGHTNESS_HEX]; backface-visibility: hidden;",
+    'ff3e3e': "color: #ff3e3e; text-shadow: 1px 1px 8px #e60000[BRIGHTNESS_HEX], 1px -1px 8px #e60000[BRIGHTNESS_HEX], -1px 1px 8px #e60000[BRIGHTNESS_HEX], -1px -1px 8px #e60000[BRIGHTNESS_HEX]; backface-visibility: hidden;",
+    'ffffff': "color: #ffffff; text-shadow: 1px 1px 8px #d6d6d6[BRIGHTNESS_HEX], 1px -1px 8px #d6d6d6[BRIGHTNESS_HEX], -1px 1px 8px #d6d6d6[BRIGHTNESS_HEX], -1px -1px 8px #d6d6d6[BRIGHTNESS_HEX]; backface-visibility: hidden;",
+    'fa7fd9': "color: #fa7fd9; text-shadow: 1px 1px 8px #a6439b[BRIGHTNESS_HEX], 1px -1px 8px #a6439b[BRIGHTNESS_HEX], -1px 1px 8px #a6439b[BRIGHTNESS_HEX], -1px -1px 8px #a6439b[BRIGHTNESS_HEX]; backface-visibility: hidden;",
+    'd0a74c': "color: #d0a74c; text-shadow: 1px 1px 8px #b68518[BRIGHTNESS_HEX], 1px -1px 8px #b68518[BRIGHTNESS_HEX], -1px 1px 8px #b68518[BRIGHTNESS_HEX], -1px -1px 8px #b68518[BRIGHTNESS_HEX]; backface-visibility: hidden;",
+    'fd55d7': "color: #fd55d7; text-shadow: 1px 1px 8px #e62fde[BRIGHTNESS_HEX], 1px -1px 8px #e62fde[BRIGHTNESS_HEX], -1px 1px 8px #e62fde[BRIGHTNESS_HEX], -1px -1px 8px #e62fde[BRIGHTNESS_HEX]; backface-visibility: hidden;",
+    'd9b970': "color: #d9b970; text-shadow: 1px 1px 8px #c28d1a[BRIGHTNESS_HEX], 1px -1px 8px #c28d1a[BRIGHTNESS_HEX], -1px 1px 8px #c28d1a[BRIGHTNESS_HEX], -1px -1px 8px #c28d1a[BRIGHTNESS_HEX]; backface-visibility: hidden;",
+    'cccccc': "color: #cccccc; text-shadow: 1px 1px 8px #aaaaaa[BRIGHTNESS_HEX], 1px -1px 8px #aaaaaa[BRIGHTNESS_HEX], -1px 1px 8px #aaaaaa[BRIGHTNESS_HEX], -1px -1px 8px #aaaaaa[BRIGHTNESS_HEX]; backface-visibility: hidden;"
   };
 
   const extraStyles = `
