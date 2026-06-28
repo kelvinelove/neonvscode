@@ -49,13 +49,13 @@ function getWorkbenchPaths() {
 }
 
 /**
- * Clamp brightness to [0, 1] and default to 0.85 if invalid.
+ * Clamp brightness to [0, 1] and default to 0.75 if invalid.
  * @param {unknown} value
  * @returns {number}
  */
 function parseBrightness(value) {
   const num = parseFloat(value);
-  if (isNaN(num)) return 0.85;
+  if (isNaN(num)) return 0.75;
   return Math.min(1, Math.max(0, num));
 }
 
@@ -107,7 +107,7 @@ function enableGlow(context) {
 
   const config = vscode.workspace.getConfiguration('neonvscode');
   const disableGlow = config.get('disableGlow', false);
-  const brightness = parseBrightness(config.get('glowBrightness', 0.45));
+  const brightness = parseBrightness(config.get('glowBrightness', 0.65));
 
   try {
     writeGlowScript(context, disableGlow, brightness);
@@ -280,7 +280,7 @@ function activate(context) {
               writeGlowScript(
                 context,
                 cfg.get('disableGlow', false),
-                parseBrightness(cfg.get('glowBrightness', 0.45))
+                parseBrightness(cfg.get('glowBrightness', 0.65))
               );
               vscode.window.showInformationMessage(messages.REACTIVATED, 'Reload').then(choice => {
                 if (choice === 'Reload') vscode.commands.executeCommand('workbench.action.reloadWindow');

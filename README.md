@@ -44,11 +44,12 @@ This theme includes built-in commands to manage the neon aesthetic:
 Add the following to your `settings.json`:
 
 ```json
-"neonvscode.glowBrightness": 0.45
+"neonvscode.glowBrightness": 0.65
 ```
 
 - Range: `0.0` (transparent / no glow) → `1.0` (full brightness)
-- Default is `0.45` — a carefully tuned value that avoids eye strain during long sessions
+- Default is `0.65` — a carefully tuned value that avoids eye strain during long sessions
+- Glow adds a soft visual highlight that enhances the theme’s neon atmosphere while keeping text readable and comfortable.
 - **After changing this value**, re-run **`NeonVSCode: Enable Neon Glow`** from the Command Palette to apply the new brightness
 
 ### To disable glow but keep the theme

@@ -2,7 +2,7 @@
   "name": "neonvscode",
   "displayName": "NeonVSCode",
   "description": "True OLED black theme with neon syntax inspired by the Brackets Neoncode palette by @kelvinelove. Vibrant, high-contrast colors for focused coding. Optional neon glow available via the Command Palette.",
-  "version": "0.5.9",
+  "version": "0.6.0",
   "publisher": "kelvinelove",
   "license": "MIT",
   "galleryBanner": {
@@ -84,10 +84,10 @@
         },
         "neonvscode.glowBrightness": {
           "type": "number",
-          "default": 0.85,
+          "default": 0.75,
           "minimum": 0,
           "maximum": 1,
-          "description": "Controls the brightness of the neon glow effect. Range: 0.0 (transparent/off) to 1.0 (full brightness). Default is 0.85 to avoid eye strain. Re-run 'NeonVSCode: Enable Neon Glow' after changing this value."
+          "description": "Controls the brightness of the neon glow effect. Range: 0.0 (transparent/off) to 1.0 (full brightness). Default is 0.75 to avoid eye strain. Re-run 'NeonVSCode: Enable Neon Glow' after changing this value."
         }
       }
     }
