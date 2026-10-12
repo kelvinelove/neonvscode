@@ -19,7 +19,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Install dependencies
         run: |
@@ -43,6 +43,4 @@ jobs:
           VSCE_PAT: ${{ secrets.VSCE_TOKEN }}
 
       - name: Publish to Open VSX
-        run: npx ovsx@1.2.0 publish extension.vsix --oidc
-        env:
-          OVSX_REGISTRY_URL: https://open-vsx.org
+        run: npx ovsx@1.2.0 publish --packagePath extension.vsix --trusted-publishing
