@@ -43,6 +43,6 @@ jobs:
           VSCE_PAT: ${{ secrets.VSCE_TOKEN }}
 
       - name: Publish to Open VSX
-        uses: eclipse-openvsx/publish@v1
-        with:
-          extensionFile: extension.vsix
+        run: npx ovsx publish extension.vsix --oidc
+        env:
+          OVSX_REGISTRY_URL: https://open-vsx.org
