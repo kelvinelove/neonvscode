@@ -2,7 +2,7 @@
   "name": "neonvscode",
   "displayName": "NeonVSCode",
   "description": "True OLED black theme with neon syntax inspired by the Brackets Neoncode palette by @kelvinelove. Vibrant, high-contrast colors for focused coding. Optional neon glow available via the Command Palette.",
-  "version": "0.6.3",
+  "version": "0.6.5",
   "publisher": "kelvinelove",
   "license": "MIT",
   "galleryBanner": {
