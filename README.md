@@ -2,7 +2,7 @@
 
 **Tokyo Nights, OLED Blacks, and Neon Glow.**
 
-[NeonVSCode]([url](https://marketplace.visualstudio.com/items?itemName=kelvinelove.neonvscode)) is a high-contrast, vibrant dark theme for Visual Studio Code. Originally born as the popular NeonCode theme for Adobe Brackets, it has been completely rebuilt for VS Code with **True OLED Black (#000000)** optimization and modernized syntax highlighting.
+[NeonVSCode](https://marketplace.visualstudio.com/items?itemName=kelvinelove.neonvscode) is a high-contrast, vibrant dark theme for Visual Studio Code. Originally born as the popular NeonCode theme for Adobe Brackets, it has been completely rebuilt for VS Code with **True OLED Black (#000000)** optimization and modernized syntax highlighting.
 
 ## ✨ Features
 
@@ -16,7 +16,7 @@
 ![NeonVSCode Full Effect](https://github.com/user-attachments/assets/6d55e983-394b-40e4-888b-9ffd7f816cbd)
 *The theme in full effect with Neon Glow enabled.*
 
-## � Installation
+## Installation
 
 1. Open **Visual Studio Code**.
 2. Go to **View > Extensions**.
@@ -44,11 +44,11 @@ This theme includes built-in commands to manage the neon aesthetic:
 Add the following to your `settings.json`:
 
 ```json
-"neonvscode.glowBrightness": 0.65
+"neonvscode.glowBrightness": 0.75
 ```
 
 - Range: `0.0` (transparent / no glow) → `1.0` (full brightness)
-- Default is `0.65` — a carefully tuned value that avoids eye strain during long sessions
+- Default is `0.75` — adjust it to suit your display and preference
 - Glow adds a soft visual highlight that enhances the theme’s neon atmosphere while keeping text readable and comfortable.
 - **After changing this value**, re-run **`NeonVSCode: Enable Neon Glow`** from the Command Palette to apply the new brightness
 
@@ -62,17 +62,16 @@ Add to your `settings.json`:
 
 Then re-run **`NeonVSCode: Enable Neon Glow`** to apply, or run **`NeonVSCode: Disable Neon Glow`** to remove the glow script entirely.
 
-### To remove the corruption warning
+### About the Unsupported warning and restoring VS Code
 
-Because NeonVSCode modifies internal VS Code files to inject the glow script, VS Code may display an **"Unsupported"** or **"Your installation appears to be corrupt"** notification. **This is completely normal** — the same behaviour occurs with SynthWave '84 and other UI-modifying themes.
+The glow effect is applied by adding a small script to VS Code's workbench HTML. This modifies an internal VS Code file, so VS Code may display an **"Unsupported"** or **"Your installation appears to be corrupt"** warning while glow is enabled. The warning is expected, but it indicates that the installation has been customized outside the supported extension API. VS Code updates can replace the workbench files; NeonVSCode detects this on startup and attempts to reapply glow.
 
-To permanently remove this warning:
+NeonVSCode saves a copy of the original workbench file in extension global storage before first modifying it. To disable glow and restore that copy:
 
-1. Install the **[Fix VSCode Checksums](https://marketplace.visualstudio.com/items?itemName=lehni.vscode-fix-checksums)** extension
-2. Run **`Fix Checksums: Apply`** from the Command Palette
-3. Fully restart VS Code
+1. Run **`NeonVSCode: Disable Neon Glow`** from the Command Palette (or click **Neon: On** in the status bar).
+2. Reload VS Code when prompted.
 
-You can safely dismiss the warning at any time; it does not affect stability or functionality.
+If the extension cannot write to the application folder, it reports the failure. Close other VS Code instances and check the installation folder's permissions; avoid changing ownership or permissions broadly. If automatic restoration fails, the backup is stored under VS Code's User Data `globalStorage/kelvinelove.neonvscode/workbench-original.html` directory. You can also repair or reinstall VS Code to restore its own workbench files, then enable glow again.
 
 ## 📸 Screenshots
 

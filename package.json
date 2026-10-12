@@ -19,6 +19,7 @@
   ],
   "files": [
     "assets/**/*",
+    "src/**/*",
     "themes/**/*",
     "package.json",
     "README.md"

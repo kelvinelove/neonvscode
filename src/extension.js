@@ -3,14 +3,15 @@ const fs = require('fs');
 const vscode = require('vscode');
 
 const SCRIPT_TAG = 'neon-glow.js';
-const EXTENSION_ID = 'kelvinelove.neonvscode';
+const BACKUP_FILE = 'workbench-original.html';
+const DEFAULT_BRIGHTNESS = 0.75;
 
 const messages = {
-  ACTIVATED: 'Neon Glow enabled. VS Code must reload for this change to take effect. Note: VS Code may show an "Unsupported" warning - this is normal. Check README.md on how to disable it.',
-  DEACTIVATED: 'Neon Glow disabled. VS Code must reload for this change to take effect.',
+  ACTIVATED: 'Neon Glow enabled. VS Code modifies its workbench to provide this effect, which can trigger an Unsupported warning. Reload to apply.',
+  DEACTIVATED: 'Neon Glow disabled and the original workbench restored. Reload to apply.',
   REACTIVATED: 'Neon glow settings updated. Reload to apply.',
   NOT_RUNNING: 'Neon glow is not enabled.',
-  ERROR_ACCESS_DENIED: 'Unable to modify VS Code core files. Try running VS Code with admin privileges.',
+  ERROR_ACCESS_DENIED: 'Unable to modify VS Code core files. Check file permissions and close other VS Code instances before retrying.',
   ERROR_WORKBENCH_NOT_FOUND: 'Could not find the workbench HTML file. Please open an issue on GitHub.',
   ERROR_GENERIC: 'Something went wrong while enabling neon glow.',
   PROMPT_ENABLE: 'NeonVSCode theme is active. Enable the neon glow effect? (one-time setup)'
@@ -49,13 +50,13 @@ function getWorkbenchPaths() {
 }
 
 /**
- * Clamp brightness to [0, 1] and default to 0.75 if invalid.
+ * Clamp brightness to [0, 1] and default to DEFAULT_BRIGHTNESS if invalid.
  * @param {unknown} value
  * @returns {number}
  */
 function parseBrightness(value) {
   const num = parseFloat(value);
-  if (isNaN(num)) return 0.75;
+  if (!Number.isFinite(num)) return DEFAULT_BRIGHTNESS;
   return Math.min(1, Math.max(0, num));
 }
 
@@ -69,7 +70,7 @@ function brightnessToHex(brightness) {
   return Math.round(brightness * 255).toString(16).padStart(2, '0').toUpperCase();
 }
 
-function writeGlowScript(context, disableGlow, brightness) {
+function writeGlowScript(context, paths, disableGlow, brightness) {
   const brightnessHex = brightnessToHex(parseBrightness(brightness));
   const jsTemplate = fs.readFileSync(
     path.join(context.extensionPath, 'src', 'js', 'neon-glow-template.js'),
@@ -78,7 +79,6 @@ function writeGlowScript(context, disableGlow, brightness) {
   const finalScript = jsTemplate
     .replace(/\[DISABLE_GLOW\]/g, disableGlow ? 'true' : 'false')
     .replace(/\[BRIGHTNESS_HEX\]/g, brightnessHex);
-  const paths = getWorkbenchPaths();
   fs.writeFileSync(paths.templateFile, finalScript, 'utf-8');
 }
 
@@ -98,6 +98,45 @@ function removeScript(html) {
   return html.replace(re, '');
 }
 
+function getBackupPath(context) {
+  return path.join(context.globalStorageUri.fsPath, BACKUP_FILE);
+}
+
+function atomicWrite(file, content) {
+  const temporaryFile = `${file}.${process.pid}.tmp`;
+  const mode = fs.existsSync(file) ? fs.statSync(file).mode : undefined;
+  try {
+    fs.writeFileSync(temporaryFile, content, { encoding: 'utf-8', mode });
+    fs.renameSync(temporaryFile, file);
+  } catch (error) {
+    if (fs.existsSync(temporaryFile)) fs.unlinkSync(temporaryFile);
+    throw error;
+  }
+}
+
+function createBackup(context, html) {
+  fs.mkdirSync(context.globalStorageUri.fsPath, { recursive: true });
+  const backupPath = getBackupPath(context);
+  if (!fs.existsSync(backupPath)) {
+    atomicWrite(backupPath, html);
+  }
+  return backupPath;
+}
+
+function restoreWorkbench(context, paths) {
+  const backupPath = getBackupPath(context);
+  if (fs.existsSync(backupPath)) {
+    atomicWrite(paths.htmlFile, fs.readFileSync(backupPath, 'utf-8'));
+    fs.unlinkSync(backupPath);
+  } else {
+    // Compatibility path for older versions: strip our tag but do not imply
+    // this reconstructs any workbench content changed by a VS Code update.
+    const current = fs.readFileSync(paths.htmlFile, 'utf-8');
+    atomicWrite(paths.htmlFile, removeScript(current));
+  }
+  if (fs.existsSync(paths.templateFile)) fs.unlinkSync(paths.templateFile);
+}
+
 function enableGlow(context) {
   const paths = getWorkbenchPaths();
   if (!paths) {
@@ -107,13 +146,12 @@ function enableGlow(context) {
 
   const config = vscode.workspace.getConfiguration('neonvscode');
   const disableGlow = config.get('disableGlow', false);
-  const brightness = parseBrightness(config.get('glowBrightness', 0.65));
+  const brightness = parseBrightness(config.get('glowBrightness', DEFAULT_BRIGHTNESS));
 
   try {
-    writeGlowScript(context, disableGlow, brightness);
-
     const html = fs.readFileSync(paths.htmlFile, 'utf-8');
     if (isGlowEnabled(html)) {
+      writeGlowScript(context, paths, disableGlow, brightness);
       vscode.window
         .showInformationMessage(messages.REACTIVATED, 'Reload')
         .then((choice) => {
@@ -124,8 +162,25 @@ function enableGlow(context) {
       return;
     }
 
+    createBackup(context, html);
+    try {
+      writeGlowScript(context, paths, disableGlow, brightness);
+    } catch (error) {
+      const backupPath = getBackupPath(context);
+      try {
+        if (fs.existsSync(backupPath)) fs.unlinkSync(backupPath);
+      } catch (cleanupError) {
+        console.error('NeonVSCode could not clean up a failed glow backup.', cleanupError);
+      }
+      throw error;
+    }
     const output = injectScript(html);
-    fs.writeFileSync(paths.htmlFile, output, 'utf-8');
+    if (!output || output === html) {
+      fs.unlinkSync(getBackupPath(context));
+      if (fs.existsSync(paths.templateFile)) fs.unlinkSync(paths.templateFile);
+      throw new Error('Could not add the glow script to the workbench HTML.');
+    }
+    atomicWrite(paths.htmlFile, output);
     updateStatusBarItem();
 
     vscode.window
@@ -146,7 +201,7 @@ function enableGlow(context) {
   }
 }
 
-function disableGlow() {
+function disableGlow(context) {
   const paths = getWorkbenchPaths();
   if (!paths) {
     vscode.window.showErrorMessage(messages.ERROR_WORKBENCH_NOT_FOUND);
@@ -160,12 +215,8 @@ function disableGlow() {
       return;
     }
 
-    fs.writeFileSync(paths.htmlFile, removeScript(html), 'utf-8');
+    restoreWorkbench(context, paths);
     updateStatusBarItem();
-
-    if (fs.existsSync(paths.templateFile)) {
-      fs.unlinkSync(paths.templateFile);
-    }
 
     vscode.window
       .showInformationMessage(messages.DEACTIVATED, 'Reload')
@@ -221,7 +272,7 @@ function toggleGlow(context) {
   try {
     const html = fs.readFileSync(paths.htmlFile, 'utf-8');
     if (isGlowEnabled(html)) {
-      disableGlow();
+      disableGlow(context);
     } else {
       enableGlow(context);
     }
@@ -236,24 +287,49 @@ function updateStatusBarItem() {
     statusBarItem.command = 'neonvscode.toggleGlow';
   }
 
-  const paths = getWorkbenchPaths();
-  const isThemeActive = isNeonThemeActive();
-
-  // Show status bar item if the theme is active OR if the glow script is currently injected
-  const hasInjectedScript = paths && fs.existsSync(paths.htmlFile) && isGlowEnabled(fs.readFileSync(paths.htmlFile, 'utf-8'));
-
-  if (isThemeActive || hasInjectedScript) {
-    try {
-      const html = fs.readFileSync(paths.htmlFile, 'utf-8');
-      const enabled = isGlowEnabled(html);
+  try {
+    const paths = getWorkbenchPaths();
+    const isThemeActive = isNeonThemeActive();
+    const html = paths && fs.existsSync(paths.htmlFile) ? fs.readFileSync(paths.htmlFile, 'utf-8') : '';
+    const enabled = isGlowEnabled(html);
+    if (isThemeActive || enabled) {
       statusBarItem.text = enabled ? "$(zap) Neon: On" : "$(zap) Neon: Off";
       statusBarItem.tooltip = enabled ? "NeonVSCode: Click to disable neon glow" : "NeonVSCode: Click to enable neon glow";
       statusBarItem.show();
-    } catch {
+    } else {
       statusBarItem.hide();
     }
-  } else {
+  } catch {
     statusBarItem.hide();
+  }
+}
+
+function recoverAfterWorkbenchUpdate(context) {
+  const paths = getWorkbenchPaths();
+  if (!paths) return;
+  try {
+    const html = fs.readFileSync(paths.htmlFile, 'utf-8');
+    const backupPath = getBackupPath(context);
+    if (!isGlowEnabled(html) && fs.existsSync(backupPath)) {
+      // An update replaced the modified workbench. Preserve its new pristine
+      // version as the next restore point, then reapply the user's glow choice.
+      const previousBackup = fs.readFileSync(backupPath, 'utf-8');
+      atomicWrite(backupPath, html);
+      const config = vscode.workspace.getConfiguration('neonvscode');
+      try {
+        writeGlowScript(context, paths, config.get('disableGlow', false), parseBrightness(config.get('glowBrightness', 0.75)));
+        const output = injectScript(html);
+        if (output) {
+          atomicWrite(paths.htmlFile, output);
+          vscode.window.showInformationMessage('VS Code updated its workbench. Neon Glow was reapplied; reload to use it.');
+        }
+      } catch (error) {
+        atomicWrite(backupPath, previousBackup);
+        throw error;
+      }
+    }
+  } catch (error) {
+    console.error('NeonVSCode could not recover glow after a workbench update.', error);
   }
 }
 
@@ -263,7 +339,7 @@ function updateStatusBarItem() {
 function activate(context) {
   context.subscriptions.push(
     vscode.commands.registerCommand('neonvscode.enableGlow', () => enableGlow(context)),
-    vscode.commands.registerCommand('neonvscode.disableGlow', () => disableGlow()),
+    vscode.commands.registerCommand('neonvscode.disableGlow', () => disableGlow(context)),
     vscode.commands.registerCommand('neonvscode.toggleGlow', () => toggleGlow(context)),
     vscode.workspace.onDidChangeConfiguration((event) => {
       if (event.affectsConfiguration('workbench.colorTheme')) {
@@ -279,8 +355,9 @@ function activate(context) {
               const cfg = vscode.workspace.getConfiguration('neonvscode');
               writeGlowScript(
                 context,
+                paths,
                 cfg.get('disableGlow', false),
-                parseBrightness(cfg.get('glowBrightness', 0.65))
+                parseBrightness(cfg.get('glowBrightness', DEFAULT_BRIGHTNESS))
               );
               vscode.window.showInformationMessage(messages.REACTIVATED, 'Reload').then(choice => {
                 if (choice === 'Reload') vscode.commands.executeCommand('workbench.action.reloadWindow');
@@ -292,6 +369,7 @@ function activate(context) {
     })
   );
 
+  recoverAfterWorkbenchUpdate(context);
   maybePromptForGlow(context);
   updateStatusBarItem();
 }
